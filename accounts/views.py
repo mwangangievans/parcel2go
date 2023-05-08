@@ -15,23 +15,31 @@ User = get_user_model()
 
 
 # Create your views here.
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = (IsAuthenticated,)
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
-    
+
+
 class RegisterApiView(generics.GenericAPIView):
     serializer_class = serializers.RegisterSerializer
+
     def post(self, request):
-        serializer = self.get_serializer(data= request.data)
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
-            user = User(username=serializer.data["username"], email=serializer.data["email"], password = make_password(serializer.data["password"]) )
+            user = User(
+                username=serializer.data["username"],
+                email=serializer.data["email"],
+                password=make_password(serializer.data["password"]),
+            )
             user.save()
-            response_data = {"msg":"success"}
+            response_data = {"msg": "success"}
         except Exception as e:
-            response_data={"error":f"{str(e)}"}
+            response_data = {"error": f"{str(e)}"}
         return Response(response_data, status.HTTP_201_CREATED)
-        
+
+
 class LoginApiView(generics.GenericAPIView):
     serializer_class = serializers.LoginSerializer
 
@@ -61,22 +69,23 @@ class LoginApiView(generics.GenericAPIView):
 class ProfileApiView(generics.GenericAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.ProfileSerializer
+
     def post(self, request):
-        serializer = self.get_serializer(data= request.data)
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = request.user
         try:
-            user.first_name = serializer.data['first_name']
-            user.last_name = serializer.data['last_name']
+            user.first_name = serializer.data["first_name"]
+            user.last_name = serializer.data["last_name"]
             user.address = serializer.data["address"]
             user.photo = serializer.data["photo"]
             user.phone_number = serializer.data["phone_number"]
             user.save()
             response_data = self.get_serializer(user).data
         except Exception as e:
-            response_data={"error":f"{str(e)}"}
+            response_data = {"error": f"{str(e)}"}
         return Response(response_data, status.HTTP_201_CREATED)
-    
+
     def get(self, request):
-        serializer= self.get_serializer(request.user)
+        serializer = self.get_serializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
