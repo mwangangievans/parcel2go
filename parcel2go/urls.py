@@ -39,6 +39,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("auth/", include("accounts.urls")),
+    path("parcel/", include("parcel.urls")),
     # Documentation
     re_path(
         r"^swagger(?P<format>\.json|\.yaml)$",
