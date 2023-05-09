@@ -5,4 +5,6 @@ from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 
 router.register("", views.ParcelModelViewSet, basename="parcel")
-urlpatterns = [] + router.urls
+urlpatterns = [
+    path("send_sms/", views.SendBulkSmsApiView.as_view(), name="send_sms")
+] + router.urls

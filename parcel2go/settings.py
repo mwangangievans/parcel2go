@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import datetime
 from pathlib import Path
 import environ
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "drf_yasg",
     "accounts.apps.AccountsConfig",
+    "parcel.apps.ParcelConfig",
 ]
 
 MIDDLEWARE = [
@@ -86,14 +88,15 @@ WSGI_APPLICATION = "parcel2go.wsgi.application"
 #     }
 # }
 
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql', 
-        'NAME': env.get_value("DB_NAME"),
-        'USER': env.get_value("DB_USER"),
-        'PASSWORD': env.get_value("DB_PASSWORD"),
-        'HOST': env.get_value("DB_HOST"),   # Or an IP Address that your DB is hosted on
-        'PORT': env.get_value("DB_PORT"),
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": env.get_value("DB_NAME"),
+        "USER": env.get_value("DB_USER"),
+        "PASSWORD": env.get_value("DB_PASSWORD"),
+        "HOST": env.get_value("DB_HOST"),  # Or an IP Address that your DB is hosted on
+        "PORT": env.get_value("DB_PORT"),
     }
 }
 
@@ -142,7 +145,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "accounts.User"
 
-AUTHENTICATION_BACKENDS = ['accounts.backends.EmailBackend']
+AUTHENTICATION_BACKENDS = ["accounts.backends.EmailBackend"]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -153,9 +156,13 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": datetime.timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=1),
 }
- 
+
 SWAGGER_SETTINGS = {
     "SECURITY_DEFINITIONS": {
         "Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"},
     }
 }
+
+
+AFRICATALKING_USERNAME = env.get_value("AFRICATALKING_USERNAME")
+AFRICATALKING_API_KEY = env.get_value("AFRICATALKING_API_KEY")
