@@ -5,12 +5,14 @@ from . import models
 
 
 class ParcelSerializer(serializers.ModelSerializer):
-    sender  = UserSerializer()
-    receiver = UserSerializer()
-    
     class Meta:
         model = models.Parcel
         fields = "__all__"
+        
+    def to_representation(self, instance):
+        self.fields["sender"] = UserSerializer()
+        self.fields["receiver"] = UserSerializer()
+        return super(ParcelSerializer, self).to_representation(instance)
 
 
 class SendSmsSerializer(serializers.Serializer):
